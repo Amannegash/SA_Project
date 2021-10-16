@@ -11,9 +11,9 @@ spring:
     gateway:
       routes:
         - id: order-service
-          uri: lb://ORDER-SERVICE
+          uri: lb://RESERVATION-SERVICE
           predicates:
-            - Path=/order/**
+            - Path=/reservation/**
           filters:
             - name: CircuitBreaker
               args:
@@ -30,16 +30,7 @@ spring:
                 fallbackuri:
                   forward:/paymentFallback
 
-        - id: address-service
-          uri: lb://ADDRESS-SERVICE
-          predicates:
-            - Path=/address/**
-          filters:
-           - name: CircuitBreaker
-             args:
-               name: address-service
-               fallbackuri:
-                 forward:/addressFallback
+      
 
 eureka:
   client:
