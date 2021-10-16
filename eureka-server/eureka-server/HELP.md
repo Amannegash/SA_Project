@@ -1,7 +1,7 @@
 # Read Me First
 The following was discovered as part of building this project:
 
-* The original package name 'edu.miu.c590.reservation-service' is invalid and this project uses 'edu.miu.c590.reservationservice' instead.
+* The original package name 'edu.miu.c590.eureka-server' is invalid and this project uses 'edu.miu.c590.eurekaserver' instead.
 
 # Getting Started
 
