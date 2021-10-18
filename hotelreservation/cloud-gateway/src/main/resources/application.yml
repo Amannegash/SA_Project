@@ -1,0 +1,96 @@
+server.port : 9191
+
+spring:
+  application:
+    name: GATEWAY-SERVICE
+  zipkin:
+    base-url: http://localhost:9411
+  main:
+    web-application-type: reactive
+  cloud:
+    gateway:
+      routes:
+        - id: reservation-service
+          uri: lb://RESERVATION-SERVICE
+          predicates:
+            - Path=/reservation/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: reservation-service
+                fallbackuri: forward:/reservationFallback
+        - id: payment-service
+          uri: lb://PAYMENT-SERVICE
+          predicates:
+            - Path=/payment/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: payment-service
+                fallbackuri:
+                  forward:/paymentFallback
+        - id: guest-service
+          uri: lb://GUEST-SERVICE
+          predicates:
+            - Path=/guest/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: guest-service
+                fallbackuri:
+                    forward:/guestFallback
+        - id: hotel-service
+          uri: lb://HOTEL-SERVICE
+          predicates:
+            - Path=/guest/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: hotel-service
+                fallbackuri:
+                   forward:/hotelFallback
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
+
+server:
+  port: 8787
+
+
+management:
+  security:
+    enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: health
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoint:
+    health:
+      show-details: always
+
+resilience4j:
+  circuitbreaker:
+    backends:
+      orderServiceFallBackMethod:
+        register-health-indicator: true
+      paymentServiceFallBackMethod:
+        register-health-indicator: true
+
+
+springbootwebfluxjjwt.password.encoder.secret: mysecret
+springbootwebfluxjjwt.password.encoder.iteration: 33
+springbootwebfluxjjwt.password.encoder.keylength: 256
+springbootwebfluxjjwt.jjwt.secret: ThisIsSecretForJWTHS512SignatureAlgorithmThatMUSTHave64ByteLength
+springbootwebfluxjjwt.jjwt.expiration: 28800
+
+
+
